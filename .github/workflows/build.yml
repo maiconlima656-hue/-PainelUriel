@@ -10,15 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Descompactar e Entrar na Pasta
+        run: |
+          unzip PainelUriel.zip
+          if [ -d "PainelUriel" ]; then
+            cd PainelUriel
+          fi
+          
       - name: Configurar Java 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+          
       - name: Dar permissao ao Gradlew
         run: chmod +x gradlew
+        
       - name: Compilar o APK com C++
         run: ./gradlew assembleDebug
+        
       - name: Salvar o APK pronto
         uses: actions/upload-artifact@v4
         with:
