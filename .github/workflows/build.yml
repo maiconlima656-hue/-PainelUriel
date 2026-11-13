@@ -11,27 +11,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Descompactar e Entrar na Pasta
-        run: |
-          unzip PainelUriel.zip
-          if [ -d "PainelUriel" ]; then
-            cd PainelUriel
-          fi
-          
+      - name: Instalar 7z
+        run: sudo apt-get install p7zip-full -y
+
+      - name: Descompactar Projeto
+        run: 7z x PainelUriel.7z
+
       - name: Configurar Java 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          
-      - name: Dar permissao ao Gradlew
-        run: chmod +x gradlew
-        
-      - name: Compilar o APK com C++
-        run: ./gradlew assembleDebug
-        
+
+      - name: Entrar na pasta e Compilar
+        run: |
+          if [ -d "PainelUriel" ]; then cd PainelUriel; fi
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
       - name: Salvar o APK pronto
         uses: actions/upload-artifact@v4
         with:
           name: Painel-Uriel-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: '**/app-debug.apk'
